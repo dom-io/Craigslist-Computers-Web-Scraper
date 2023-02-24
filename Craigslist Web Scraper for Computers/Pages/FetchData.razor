@@ -1,0 +1,70 @@
+﻿@page "/fetchdata"
+@using Craigslist_Web_Scraper_for_Computers.Data
+@inject WeatherForecastService ForecastService
+
+<PageTitle>Extended List</PageTitle>
+
+<h1>Extended List for Orange County</h1>
+
+<select name="sort" id="sort">
+    <option value="price-h2l">Price: High to Low</option>
+    <option value="price-l2h">Price: Low to High</option>
+    <option value="most-recent">Most Recent</option>
+</select>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Posted On</th>
+            <th>Price</th>
+            <th>Title</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>12/12/2023</td>
+            <td>$4000</td>
+            <td>3dddddddddddddddddddddddddddddddddddddddddddddddddddddd</td>
+        </tr>
+    </tbody>
+</table>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+    private WeatherForecast[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await ForecastService.GetForecastAsync(DateOnly.FromDateTime(DateTime.Now));
+    }
+}
